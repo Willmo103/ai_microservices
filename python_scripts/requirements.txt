@@ -1,0 +1,4 @@
+markdown
+requests
+tqdm
+bs4
