@@ -1,0 +1,27 @@
+name: Docker Build and Test
+
+on:
+  push:
+    paths:
+      - "scrape-ollama/**"
+  pull_request:
+    paths:
+      - "scrape-ollama/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      docker:
+        image: docker:19.03.12
+        options: --privileged
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Build Docker image for scrape-ollama
+        run: |
+          docker build -t scrape-ollama -f scrape-ollama/Dockerfile ./scrape-ollama
+      - name: Run tests for scrape-ollama
+        run: |
+          docker run --name scrape-ollama-container scrape-ollama python test_app.py
